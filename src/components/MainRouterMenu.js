@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-
+import { Link, useLocation } from 'react-router-dom'
 
 let headerStyle = {
   //   paddingTop: `.1em`,
@@ -53,12 +52,17 @@ let us_elitegear_logo = {
   // left: '18px'
 }
 
-export default function MainRouterMenu () {
-  const [selectedLink, setSelectedLink] = useState(`Home`) // looking to set state to render different background color for selected component
 
-  const chooseStyle = str => {
-    return selectedLink === str ? selectedMainNav : mainNav
+
+
+
+export default function MainRouterMenu () {
+  const location = useLocation()?.pathname;
+
+  const chooseStyle = (str) => {
+    return str === location ? selectedMainNav : mainNav
   }
+
 
   return (
     <header style={headerStyle}>
@@ -69,20 +73,29 @@ export default function MainRouterMenu () {
           src='https://cdn.shopify.com/s/files/1/1735/4437/files/us-elite-logo-landscape_06a0d777-82b7-4962-a034-00cc86a6dc4d_x55.png?v=1576742234'
         />
       </h1>
-      
-      <h2 style={chooseStyle(`Home`)}>
-        <Link
-          onClick={e => {
-            // e.preventDefault()
-            setSelectedLink(`Home`)
-          }}
-          to='/'
-        >
+
+      <h2 style={chooseStyle(`/`)}>
+        <Link to='/'>
           Home
         </Link>
       </h2>
-      
 
+      <h2 style={chooseStyle('/pricelists')}>
+        <Link to='/pricelists'>
+          Price Lists
+        </Link>
+      </h2>
+
+      <h2 style={chooseStyle('/oldgsa')}>
+        <Link to='/oldgsa'>
+          Old GSA
+        </Link>
+      </h2>
+      <h2 style={chooseStyle('/gsa_doc_maker')}>
+        <Link to='/gsa_doc_maker'>
+          GSA Doc Maker
+        </Link>
+      </h2>
 
     </header>
   )

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import apiCaller from './functions/apiCaller'
+import apiCaller from '../functions/apiCaller'
+import mapProductListToButtons from './priceListFunks/mapProductListToButtons'
+import mapProductListToTable from './priceListFunks/mapProductListToTable'
 
 let getPriceLists = () =>
   apiCaller({ route: `/sheets/pricelists`, method: `GET` })
@@ -112,29 +114,6 @@ export default function PriceLists (props) {
     }
   }
 
-  let mapProductVariantData = variants => {
-    let variantList = variants.map((option, i) => {
-    //   let inCart = () => {
-    //     let isInCart = props.cartItems.find(el => el.fullSKU === option.fullSKU)
-    //     return isInCart === undefined ? `Add to Cart` : 'Remove'
-    //   }
-      return (
-        <div key={i}>
-          {option.fullSKU} - {option.upc_color} {option.upc_size}
-          <button
-            onClick={e => {
-              e.preventDefault()
-              props.addToCart(option)
-            }}
-          >
-            {/* {inCart()} */}
-          </button>
-        </div>
-      )
-    })
-    return variantList
-  }
-
   let mapPriceLists = arr => {
     let brandsMapped = arr.map((brand, i) => {
       return (
@@ -186,54 +165,152 @@ export default function PriceLists (props) {
     return brandsMapped
   }
 
-  let updateSelectedItem = (product, productIndex, brandIndex) => {
-    product.displayVariants = !product.displayVariants
-    let updateSelectedLists = [...selectedLists]
-    let productArr = selectedLists[brandIndex].hasProducts
-    productArr[productIndex] = product
-    updateSelectedLists[brandIndex].hasProducts = productArr
+  let updateSelectedListsState = updateSelectedLists => {
     return setSelectedLists([...updateSelectedLists])
-  }
-
-  let mapProductList = arr => {
-    let brandsMapped = arr.map((brandObj, i) => {
-      if (brandObj.displayProducts === true) {
-        let productArr = brandObj.hasProducts.map((product, j) => {
-          if (product.displayVariants === undefined) {
-            product.displayVariants = false
-          }
-
-          let displayProductVariantData = mapProductVariantData(
-            product.variants
-          )
-
-          return (
-            <div key={j}>
-              <button
-                onClick={e => {
-                  e.preventDefault()
-                  // console.log(
-                  //   `You selected: ${product.price_parent_sku} ${product.price_product_name} , product.displayVariants: ${product.displayVariants}`
-                  // )
-                  updateSelectedItem(product, j, i)
-                }}
-              >{`${product.price_parent_sku} ${product.price_product_name}`}</button>
-              {product.displayVariants === false
-                ? null
-                : displayProductVariantData}
-              {/* {mapProductVariantData(product.variants)} */}
-            </div>
-          )
-        })
-        return productArr
-      }
-    })
-    return brandsMapped
   }
 
   let displayPriceList = mapPriceLists(priceLists)
   let displaySelectedPriceList = mapSelectionLists(selectedLists)
-  let displayProductList = mapProductList(selectedLists)
+
+  // let displayProductList = mapProductList(selectedLists) // this outputs the product names to a list of buttons that when clicked shows the variant options
+  let displayProductListAsButtons = mapProductListToButtons(
+    selectedLists,
+    updateSelectedListsState
+  ) // this outputs the product names to a list of buttons that when clicked shows the variant options
+
+  let sortByPropName = (array, propName) => {
+    if (array[0] === undefined || array[0] === 'empty') {
+      return array
+    }
+    return array.sort((a, b) => {
+      if (a[propName] < b[propName]) {
+        return -1
+      }
+      if (a[propName] > b[propName]) {
+        return 1
+      }
+      return 0
+    })
+  }
+
+  let removeUnchangedData = (array, removeReqStr) => {
+    // console.log('array.length: ', array.length)
+    // console.log('removeReqStr: ', removeReqStr)
+    let resData = []
+
+    array.map((product, i) => {
+      if (i === 0) {
+        console.log('i: ', i)
+        console.log('resData.length: ', resData.length) // 0 : returned on first call
+        // console.log('resData[i]: ', resData[i]) // undefined : returned on first call
+        // console.log('.map((product', product) // 'empty' : String returned on first call
+      }
+
+      // compare product to resData[i]
+      if (product !== 'empty') {
+        // if(i===0){console.log("if (product !== 'empty')", product)} //  first product of the array returned once product array is available
+
+        // compare prop (.price_parent_sku) on product and resData[resData.length-1], if no match add product to resData, if match proceed to assess removeReqStr for additional logic
+        //removeReqStr = 'Remove All' should check all props on product object
+        //removeReqStr = <string for specific propName> should check just that propName on product object
+        let compareProducts = (
+          lastProduct,
+          currentProduct,
+          removeValByProp
+        ) => {
+          // console.log(`compare last item of resData:${lastProduct.price_parent_sku} to product ${currentProduct.price_parent_sku}`)
+          // console.log('removeValByProp: ',removeValByProp)
+          let compareProductProps = (last, current, removeValOfProp) => {
+            let propKeys = Object.keys(last)
+            let addItem = {}
+            // console.log('propKeys.length: ',propKeys.length)
+            for (let x = 0; x < propKeys.length; x++) {
+              let checkProp = propKeys[x]
+              if (checkProp !== 'price_parent_sku') {
+                // console.log('checkProp', checkProp)
+
+                addItem = {
+                  ...addItem,
+                  [checkProp]:
+                    last[checkProp] === current[checkProp]
+                      ? current[checkProp]
+                      // ? ''
+                      : `was: ${last[checkProp]} \n now: ${current[checkProp]}`
+                }
+              } else {
+                addItem = {
+                  ...addItem,
+                  [checkProp]: current[checkProp]
+                }
+              }
+              //  console.log(`current[checkProp] :${current[checkProp]} \n last[checkProp]:${last[checkProp]}`)
+            }
+            // console.log('addItem: ',addItem)
+            //  return addItem.price_parent_sku	!== '' ? addItem : {}
+            return addItem
+          }
+          let changedItem =
+            lastProduct.price_parent_sku !== currentProduct.price_parent_sku
+              ? currentProduct
+              : compareProductProps(
+                  lastProduct,
+                  currentProduct,
+                  removeValByProp
+                )
+
+          // lastProduct.price_parent_sku !== currentProduct.price_parent_sku
+          //   ? (resData = [...resData, currentProduct])
+          //   : (resData = [...resData, changedItem])
+            // :(resData.slice(-1).push(changedItem) )
+            // console.log("resData.slice", resData.slice(1))
+            console.log("resData.filter", resData.filter(el => el.price_parent_sku !== changedItem.price_parent_sku)) 
+            resData = [...resData.filter(el => el.price_parent_sku !== changedItem.price_parent_sku), changedItem]
+          return resData
+        }
+        // resData.length > 0 ? resData = [...resData, product] : console.log(`--- nothing to compare in resData Array ---`)
+        // resData.length === 0 ? resData = [...resData, product] : console.log(`i: ${i}, resData.lenght: ${resData.length} `)
+        resData.length > 0
+          ? compareProducts(resData[resData.length - 1], product, removeReqStr)
+          : (resData = [...resData, product])
+        return resData
+        // product.price_parent_sku === resData[i].price_parent_sku ? console.log("match") : resData = [...resData, product]
+      }
+
+      return product
+    })
+    // console.log("end of map")
+
+    return resData
+  }
+
+  let productList = selectedListsArray => {
+    let newList = []
+    selectedListsArray.map(priceList => {
+      if (priceList !== 'selectedLists') {
+        //if (priceList !== 'Default State')
+        let tempList = priceList.hasProducts.map(product => {
+          // console.log("product:", product)
+          if (product !== 'empty') {
+            return product
+          }
+          return 'empty'
+        })
+        // console.log('PriceLists.productList.tempList: ', tempList)
+
+        return (newList = [...newList, ...tempList])
+      }
+      return newList
+    })
+    // console.log('PriceLists.productList.newList: ', newList)
+
+    newList = sortByPropName(newList, 'price_parent_sku')
+    newList = sortByPropName(newList, 'price_product_name')
+    newList = removeUnchangedData(newList, 'Remove All')
+
+    return newList
+  }
+
+  let displayTable = mapProductListToTable(productList(selectedLists)) // this outputs the product details to a table
 
   useEffect(() => {
     let mounted = true
@@ -294,7 +371,8 @@ export default function PriceLists (props) {
         </div>
       )}
 
-      {displayProductList}
+      {/* {displayProductListAsButtons} */}
+      {displayTable}
     </div>
   )
 }
