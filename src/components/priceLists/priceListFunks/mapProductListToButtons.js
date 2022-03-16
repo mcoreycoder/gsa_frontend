@@ -33,7 +33,7 @@ export default function mapProductListToButtons (arr, updateSelectedListsState) 
         })
         return productArr
       }
-      return
+      return console.log("brandsMapped")
     })
     return brandsMapped
   }

@@ -19,9 +19,11 @@ export function getDocData (docsArr) {
     method: `GET`
   })
 }
-export default {
+
+let apiCalls= {
   getPriceLists,
   getProductData,
   getDocsLists,
   getDocData
 }
+export default apiCalls

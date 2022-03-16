@@ -386,8 +386,10 @@ export default function OldGSA () {
               }
               return 0
             })
+            return newItem
           })
         }
+        return itemData
       })
 
       chosenPriceLists.map((pricelist, i) => {
@@ -412,12 +414,12 @@ export default function OldGSA () {
                 el => el.doc_sheet_name === 'Keys'
               )[0].hasData
 
-              let matchObjKeys = Object.keys(match_header_columns)
+              // let matchObjKeys = Object.keys(match_header_columns)
               let matchObjValues = Object.values(match_header_columns)
               let itemObjKeys = Object.keys(item)
               let itemObjValues = Object.values(item)
-              let itemVariantsObjKeys = Object.keys(item.variants)
-              let itemVariantsObjValues = Object.values(item.variants)
+              // let itemVariantsObjKeys = Object.keys(item.variants)
+              // let itemVariantsObjValues = Object.values(item.variants)
               let tableHeadersObjValues = Object.values(tableHeadersObj)
 
               tableHeadersObjValues.map(headerVal => {
@@ -475,8 +477,10 @@ export default function OldGSA () {
               }
               return 0
             })
+            return newItem
           })
         }
+        return console.log("chosenPriceLists return")
       })
 
       return itemData.map((item, i) => {

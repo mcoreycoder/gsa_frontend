@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import apiCaller from '../functions/apiCaller'
-import mapProductListToButtons from './priceListFunks/mapProductListToButtons'
+// import mapProductListToButtons from './priceListFunks/mapProductListToButtons'
 import mapProductListToTable from './priceListFunks/mapProductListToTable'
 
 let getPriceLists = () =>
@@ -165,18 +165,19 @@ export default function PriceLists (props) {
     return brandsMapped
   }
 
-  let updateSelectedListsState = updateSelectedLists => {
-    return setSelectedLists([...updateSelectedLists])
-  }
+  // let updateSelectedListsState = updateSelectedLists => {
+  //   return setSelectedLists([...updateSelectedLists])
+  // }
 
   let displayPriceList = mapPriceLists(priceLists)
   let displaySelectedPriceList = mapSelectionLists(selectedLists)
 
   // let displayProductList = mapProductList(selectedLists) // this outputs the product names to a list of buttons that when clicked shows the variant options
-  let displayProductListAsButtons = mapProductListToButtons(
-    selectedLists,
-    updateSelectedListsState
-  ) // this outputs the product names to a list of buttons that when clicked shows the variant options
+  // let displayProductListAsButtons = mapProductListToButtons(
+  //   selectedLists,
+  //   updateSelectedListsState
+  // )
+  // this outputs the product names to a list of buttons that when clicked shows the variant options
 
   let sortByPropName = (array, propName) => {
     if (array[0] === undefined || array[0] === 'empty') {
@@ -234,8 +235,8 @@ export default function PriceLists (props) {
                   [checkProp]:
                     last[checkProp] === current[checkProp]
                       ? current[checkProp]
-                      // ? ''
-                      : `was: ${last[checkProp]} \n now: ${current[checkProp]}`
+                      : // ? ''
+                        `was: ${last[checkProp]} \n now: ${current[checkProp]}`
                 }
               } else {
                 addItem = {
@@ -261,10 +262,20 @@ export default function PriceLists (props) {
           // lastProduct.price_parent_sku !== currentProduct.price_parent_sku
           //   ? (resData = [...resData, currentProduct])
           //   : (resData = [...resData, changedItem])
-            // :(resData.slice(-1).push(changedItem) )
-            // console.log("resData.slice", resData.slice(1))
-            console.log("resData.filter", resData.filter(el => el.price_parent_sku !== changedItem.price_parent_sku)) 
-            resData = [...resData.filter(el => el.price_parent_sku !== changedItem.price_parent_sku), changedItem]
+          // :(resData.slice(-1).push(changedItem) )
+          // console.log("resData.slice", resData.slice(1))
+          console.log(
+            'resData.filter',
+            resData.filter(
+              el => el.price_parent_sku !== changedItem.price_parent_sku
+            )
+          )
+          resData = [
+            ...resData.filter(
+              el => el.price_parent_sku !== changedItem.price_parent_sku
+            ),
+            changedItem
+          ]
           return resData
         }
         // resData.length > 0 ? resData = [...resData, product] : console.log(`--- nothing to compare in resData Array ---`)
