@@ -6,6 +6,7 @@ import Home from './Home'
 import OldGSA from './OldGSA'
 import PriceLists from './priceLists/PriceLists'
 import GSAdocMaker from './gsaDocMaker/GSAdocMaker'
+import GSA_processorPage from './gsa_processor/GSA_processorPage'
 
 export default function MainRouter () {
   let navMenu = {
@@ -32,6 +33,7 @@ export default function MainRouter () {
           <Route path='/gsa_doc_maker' component={GSAdocMaker} />
           <Route path='/pricelists' component={PriceLists} />
           <Route path='/oldgsa' component={OldGSA} />
+          <Route path='/gsa_processor' component={GSA_processorPage} />
 
           <Route path='/' component={Home} />
         </Switch>

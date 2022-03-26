@@ -52,17 +52,12 @@ let us_elitegear_logo = {
   // left: '18px'
 }
 
-
-
-
-
 export default function MainRouterMenu () {
-  const location = useLocation()?.pathname;
+  const location = useLocation()?.pathname
 
-  const chooseStyle = (str) => {
+  const chooseStyle = str => {
     return str === location ? selectedMainNav : mainNav
   }
-
 
   return (
     <header style={headerStyle}>
@@ -75,28 +70,22 @@ export default function MainRouterMenu () {
       </h1>
 
       <h2 style={chooseStyle(`/`)}>
-        <Link to='/'>
-          Home
-        </Link>
+        <Link to='/'>Home</Link>
       </h2>
 
       <h2 style={chooseStyle('/pricelists')}>
-        <Link to='/pricelists'>
-          Price Lists
-        </Link>
+        <Link to='/pricelists'>Price Lists</Link>
       </h2>
 
-      <h2 style={chooseStyle('/oldgsa')}>
-        <Link to='/oldgsa'>
-          Old GSA
-        </Link>
+      {/* <h2 style={chooseStyle('/oldgsa')}>
+        <Link to='/oldgsa'>Old GSA</Link>
+      </h2> */}
+      <h2 style={chooseStyle('/gsa_processor')}>
+        <Link to='/gsa_processor'>GSA_processorPage </Link>
       </h2>
       <h2 style={chooseStyle('/gsa_doc_maker')}>
-        <Link to='/gsa_doc_maker'>
-          GSA Doc Maker
-        </Link>
+        <Link to='/gsa_doc_maker'>GSA Doc Maker</Link>
       </h2>
-
     </header>
   )
 }

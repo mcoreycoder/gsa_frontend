@@ -7,6 +7,7 @@ import {
 } from './gsaDocMakerFunks/apiCalls'
 import docOptions from './docMakerComponents.js/docOptions'
 import selections from './docMakerComponents.js/selections'
+import composeData from './docMakerComponents.js/composeData'
 
 export default function GSAdocMaker (props) {
   const [priceLists, setPriceLists] = useState(['priceLists'])
@@ -18,40 +19,45 @@ export default function GSAdocMaker (props) {
     `selectedDocsLists`
   ])
 
-  let updateSelectedPriceLists = (newlySelected, action) => {
-    let newList
+  let updateSelectedPriceLists = async (newlySelected, action) => {
+    let newListArray
     let newObj =
       action === 'delete'
         ? newlySelected
         : {
-            id: newlySelected.google_price_list_file
+          idKey: newlySelected.google_price_list_file
               .replaceAll('https://docs.google.com/spreadsheets/d/', '')
               .split('/edit')[0],
             brand: newlySelected.brand,
-            displayProducts: true
+            displayProducts: true,
+            hasProducts: await getProductData([newlySelected.brand]).then(res => res)
           }
     if (selectedPriceLists[0] === 'selectedPriceLists') {
-      newList = [newObj]
+      newListArray = [newObj]
     } else {
       action === 'delete'
-        ? (newList = selectedPriceLists.filter(el => el.id !== newObj.id))
-        : (newList = [...selectedPriceLists, newObj])
+        ? (newListArray = selectedPriceLists.filter(el => el.idKey !== newObj.idKey))
+        : (newListArray = [...selectedPriceLists, newObj])
     }
-    if (newList[0] === undefined) {
-      newList[0] = 'selectedPriceLists'
+    if (newListArray[0] === undefined) {
+      newListArray[0] = 'selectedPriceLists'
     }
-    return setSelectedPriceLists(newList)
+    return setSelectedPriceLists(newListArray)
   }
 
-  let updateSelectedDocsLists = (newlySelected, action) => {
+  let updateSelectedDocsLists = async (newlySelected, action) => {
     let newList
     let newObj =
       action === 'delete'
         ? newlySelected
         : {
-            id: newlySelected.docSheetId,
+          idKey: `${newlySelected.docSheetId}-${newlySelected.doc_sheet_name}`,
             doc_name: newlySelected.doc_name,
-            displayProducts: true
+            displayProducts: true,
+            hasData: await getDocData(JSON.stringify({
+              docSheetId: newlySelected.docSheetId,
+              doc_sheet_name: newlySelected.doc_sheet_name
+            })).then(res => res)
           }
     if (selectedDocsLists[0] === 'selectedDocsLists') {
       newList = [newObj]
@@ -68,16 +74,8 @@ export default function GSAdocMaker (props) {
 
   let filterOptionsbySelected = (optionsList, selectedList) => {
     let filteredOptions = optionsList.filter(el => {
-      if (el.google_price_list_file !== undefined) {
-        el.id = el.google_price_list_file
-          .replaceAll('https://docs.google.com/spreadsheets/d/', '')
-          .split('/edit')[0]
-      }
-      if (el.docSheetId !== undefined) {
-        el.id = el.docSheetId
-      }
-      let found = selectedList.find(selection => selection.id === el.id)
-      return el.id !== found?.id
+      let found = selectedList?.find(selection => selection.idKey === el.idKey)
+      return el.idKey !== found?.idKey
     })
     return filteredOptions
   }
@@ -96,17 +94,32 @@ export default function GSAdocMaker (props) {
     getProductData,
     getDocData
   )
+  let showData = composeData(
+    selectedPriceLists,
+    docLists, 
+    selectedDocsLists,
+  )
+
+  
 
   useEffect(() => {
     let mounted = true
     if (mounted) {
       getPriceLists().then(response => {
-        console.log('setting pricelists')
-        setPriceLists(response)
+        let tempArr = response.map(el => {
+          el.idKey = `${el.google_price_list_file
+            .replaceAll('https://docs.google.com/spreadsheets/d/', '')
+            .split('/edit')[0]}`
+          return el
+        })
+        setPriceLists(tempArr)
       })
       getDocsLists().then(response => {
-        console.log('setting doclists')
-        setDocLists(response)
+        let tempArr = response.map(el => {
+          el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
+          return el
+        })
+        setDocLists(tempArr)
       })
     }
     return () => (mounted = false)
@@ -117,6 +130,8 @@ export default function GSAdocMaker (props) {
       <h3>Hello from GSAdocMaker</h3>
       <div>{showSelectOptions}</div>
       <div>{showSelections}</div>
+      <hr/><hr/><p>Show Data Below</p><hr/><hr/>
+      <div>{showData}</div>
     </div>
   )
 }

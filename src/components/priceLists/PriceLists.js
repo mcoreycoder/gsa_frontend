@@ -355,7 +355,7 @@ export default function PriceLists (props) {
               onClick={e => {
                 e.preventDefault()
                 // console.log(`Submitting brands : ${selectedLists}`)
-                sendPriceListSelections(selectedLists)
+                return sendPriceListSelections(selectedLists)
               }}
             >
               Submit List

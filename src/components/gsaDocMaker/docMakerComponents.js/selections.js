@@ -1,4 +1,4 @@
-export default function docMakerNav (
+export default function selections (
   selectedPriceLists,
   selectedDocsLists,
   updateSelectedPriceLists,
@@ -71,31 +71,18 @@ export default function docMakerNav (
     transform: 'scale(0.5) translate(0%, 0%)'
   }
 
+
   return (
     <div style={style1}>
       {/* docMakerNav
         <hr /> */}
       <div style={style2}>
-        Selected Price Lists:{showPriceLists}
-        <button
-          onClick={e => {
-              console.log("inactive onClick => getProductData")
-            // getProductData()
-          }}
-        >
-          Get Data For Selected Price Lists
-        </button>
+        Selected Price Lists:
+        {showPriceLists}
       </div>
       <div style={style3}>
-        Selected Documents:{showDocLists}
-        <button
-          onClick={e => {
-            console.log("inactive onClick => getDocData")
-            // getDocData()
-          }}
-        >
-          Get Data For Selected Docs
-        </button>
+        Selected Documents:
+        {showDocLists}
       </div>
     </div>
   )
