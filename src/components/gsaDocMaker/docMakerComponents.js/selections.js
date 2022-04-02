@@ -32,10 +32,10 @@ export default function selections (
     let listItem = list?.map((el, i) => {
       return (
         <li key={i}>
-          {el.doc_name} - {el.doc_sheet_name}
+          {el.doc_name} - {el.doc_sheet_name}{' '}
           <button
             onClick={e => {
-              //   console.log("el:",el)
+              console.log('el:', el)
               e.preventDefault()
               updateSelectedDocsLists(el, 'delete')
             }}
@@ -70,7 +70,6 @@ export default function selections (
 
     transform: 'scale(0.5) translate(0%, 0%)'
   }
-
 
   return (
     <div style={style1}>

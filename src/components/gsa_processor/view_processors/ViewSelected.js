@@ -22,9 +22,9 @@ let style1 = {
 export default function ViewSelected (props) {
     let selectedPriceLists = props.viewProps.selectedPriceLists
     let selectedDocsLists = props.viewProps.selectedDocsLists
+    let selectedFormat = props.viewProps.selectedFormat
     let updateSelectedPriceLists = props.viewProps.updateSelectedPriceLists
     let updateSelectedDocsLists = props.viewProps.updateSelectedDocsLists
-    let selectedFormat = props.viewProps.selectedFormat
     console.log("ViewSelected selectedFormat:",selectedFormat)
 
     let mapSelectedPriceLists = list => {

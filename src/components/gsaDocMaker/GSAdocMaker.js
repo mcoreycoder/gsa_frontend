@@ -53,6 +53,7 @@ export default function GSAdocMaker (props) {
         : {
           idKey: `${newlySelected.docSheetId}-${newlySelected.doc_sheet_name}`,
             doc_name: newlySelected.doc_name,
+            doc_sheet_name: newlySelected.doc_sheet_name,
             displayProducts: true,
             hasData: await getDocData(JSON.stringify({
               docSheetId: newlySelected.docSheetId,

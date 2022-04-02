@@ -11,22 +11,22 @@ export default function composeData (
       product.idKey = priceList.idKey
       return (allProducts = [...allProducts, product])
     })
+    //   console.log('allProducts: ', allProducts)
     return allProducts
   })
-  //   console.log('allProducts: ', allProducts)
 
-  let showAllProducts = allProducts?.map(product => {
-    return (
-      <div key={product.price_parent_sku}>
-        <p>
-          {product.brand}
-          {product.price_parent_sku}
-          {product.price_product_name}
-          {product.price_msrp}
-        </p>
-      </div>
-    )
-  })
+  // let showAllProducts = allProducts?.map(product => {
+  //   return (
+  //     <div key={product.price_parent_sku}>
+  //       <p>
+  //         {product.brand}
+  //         {product.price_parent_sku}
+  //         {product.price_product_name}
+  //         {product.price_msrp}
+  //       </p>
+  //     </div>
+  //   )
+  // })
 
   let allVariants = []
   allProducts.map(product => {
@@ -39,23 +39,23 @@ export default function composeData (
     return allVariants
   })
 
-  let showAllVariants = allVariants?.map(variant => {
-    return (
-      <div key={variant.fullSKU}>
-        <p>
-          {`
-          ${variant.upc_parent_sku}`}
-          <br />
-          {`
-          ${variant.fullSKU}
-          ${variant.upc_productname}
-          ${variant.upc_color}
-          ${variant.upc_size}
-          `}
-        </p>
-      </div>
-    )
-  })
+  // let showAllVariants = allVariants?.map(variant => {
+  //   return (
+  //     <div key={variant.fullSKU}>
+  //       <p>
+  //         {`
+  //         ${variant.upc_parent_sku}`}
+  //         <br />
+  //         {`
+  //         ${variant.fullSKU}
+  //         ${variant.upc_productname}
+  //         ${variant.upc_color}
+  //         ${variant.upc_size}
+  //         `}
+  //       </p>
+  //     </div>
+  //   )
+  // })
 
   let allData = []
   selectedDocsLists.map(doc => {
@@ -66,13 +66,13 @@ export default function composeData (
     return allData
   })
 
-  let showAllData = allData?.map(product => {
-    return (
-      <div key={product.header_column_1}>
-        <p>{product.header_column_1}</p>
-      </div>
-    )
-  })
+  // let showAllData = allData?.map(product => {
+  //   return (
+  //     <div key={product.header_column_1}>
+  //       <p>{product.header_column_1}</p>
+  //     </div>
+  //   )
+  // })
 
   let allProductsWashed = washData(allProducts, 'allProducts')
   let allVariantsWashed = washData(allVariants, 'allVariants')
@@ -94,27 +94,27 @@ export default function composeData (
     compareByProp(a.price_parent_sku, b.price_parent_sku)
   )
 
-  let showsortedBySKU = sortedBySKU?.map((product, i) => {
-    return (
-      <div style={{ fontSize: '.7em' }} key={i}>
-        <hr />
-        <p>
-          {`
-            ${product.price_parent_sku} 
-            ${product.brand} 
-            ${product.price_product_name}
-            ${product.price_msrp}
-          `}
-        </p>
-        <p style={{ fontSize: '.6em' }}>
-          {` 
-          ${product.source} : ${product.idKey}
-          `}
-        </p>
-        <hr />
-      </div>
-    )
-  })
+  // let showsortedBySKU = sortedBySKU?.map((product, i) => {
+  //   return (
+  //     <div style={{ fontSize: '.7em' }} key={i}>
+  //       <hr />
+  //       <p>
+  //         {`
+  //           ${product._parent_sku}
+  //           ${product._brand}
+  //           ${product._product_name}
+  //           ${product._msrp}
+  //         `}
+  //       </p>
+  //       <p style={{ fontSize: '.6em' }}>
+  //         {`
+  //         ${product._source} : ${product._idKey}
+  //         `}
+  //       </p>
+  //       <hr />
+  //     </div>
+  //   )
+  // })
 
   let combinedByPriceListSKU = allProductsWashed.map(product => {
     let newProductFormat = {
@@ -122,17 +122,24 @@ export default function composeData (
       variantDeets: [],
       docDeets: []
     }
+    // console.log(`newProductFormat: `,newProductFormat)
 
-    newProductFormat.variantDeets = allVariantsWashed.map(variant => {
-      if (newProductFormat.price_parent_sku === variant.upc_parent_sku) {
-        return variant
+    allVariantsWashed.map(variant => {
+      if (newProductFormat._parent_sku === variant._parent_sku) {
+        // console.log(`variant: `,variant)
+        return (newProductFormat.variantDeets = [
+          ...newProductFormat.variantDeets,
+          variant
+        ])
       }
+      return newProductFormat
     })
 
-    newProductFormat.docDeets = allDataWashed.map(docItem => {
-      if (newProductFormat.price_parent_sku === docItem.price_parent_sku) {
-        return docItem
+    allDataWashed.map(docItem => {
+      if (newProductFormat._parent_sku === docItem._parent_sku) {
+        return newProductFormat.docDeets = [...newProductFormat.docDeets, docItem]
       }
+      return newProductFormat
     })
 
     return newProductFormat
@@ -143,65 +150,63 @@ export default function composeData (
       // console.log('docItem:', docItem)
       if (docItem !== undefined) {
         return (
-          <p>
-            <p style={{ fontSize: '.59em' }}>
-              {` 
-          ${docItem.source} : ${docItem.idKey}
-          `}
-            </p>
-            {`
-  ${docItem.price_parent_sku} 
-  ${docItem.brand} 
-  ${docItem.price_product_name}
-  ${docItem.price_msrp}
-`}
-          </p>
+          <div key={i}>
+            <div style={{ fontSize: '.59em' }}>
+              {docItem._source}
+              <br />
+              <p style={{ fontSize: '.59em' }}>{docItem._idKey}</p>{' '}
+            </div>
+            {`${docItem._parent_sku}
+            ${docItem._brand}
+            ${docItem._product_name}
+            ${docItem._msrp}`}
+          </div>
         )
       }
     })
 
-    let showVariantDeets = product.variantDeets.map(variant => {
-      console.log('variant:', variant)
+    let showVariantDeets = product.variantDeets.map((variant, i) => {
+      // console.log('variant:', variant)
       if (variant !== undefined) {
         return (
-          <div>
+          <div key={i}>
             <p style={{ fontSize: '.59em' }}>
               {` 
-          ${variant.source} : ${variant.idKey}
+          ${variant._source} : ${variant._idKey}
           `}
             </p>
             {`
-  ${variant.fullSKU} 
-  ${variant.upc_productname}  
-  ${variant.upc_color} 
-  ${variant.upc_size}
+  ${variant._oldFormat.fullSKU} 
+  ${variant._oldFormat.upc_productname}  
+  ${variant._oldFormat.upc_color} 
+  ${variant._oldFormat.upc_size}
 `}
           </div>
         )
       }
     })
 
-    let countOfVariants = product.variants.length
+    let countOfVariants = product.variantDeets.length
 
     return (
       <div style={{ fontSize: '.7em' }} key={i}>
         <hr />
         <p style={{ fontSize: '.6em' }}>
           {` 
-          ${product.source} : ${product.idKey}
+          ${product._source} : ${product._idKey}
           `}
         </p>
         <p>
           {`
-            ${product.price_parent_sku} 
-            ${product.brand} 
-            ${product.price_product_name}
-            ${product.price_msrp}
+            ${product._parent_sku} 
+            ${product._brand} 
+            ${product._product_name}
+            ${product._msrp}
           `}
         </p>
-        <p style={{ fontSize: '.8em' }}>{showDocDeets}</p>
-        {/* <p style={{ fontSize: '.7em' }}>{showVariantDeets}</p> */}
+        <div style={{ fontSize: '.8em' }}>{showDocDeets}</div>
         <p style={{ fontSize: '.8em' }}>variant count: {countOfVariants}</p>
+        <div style={{ fontSize: '.7em' }}>{showVariantDeets}</div>
 
         <hr />
       </div>

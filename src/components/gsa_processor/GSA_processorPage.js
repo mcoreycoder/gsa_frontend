@@ -10,6 +10,29 @@ import {
 // import some_DataWorker from './data_processors'
 import ViewSelectionLists from './view_processors/ViewSelectionLists'
 import ViewSelected from './view_processors/ViewSelected'
+import SelectedFormatTable from './view_processors/SelectedFormatTable'
+
+
+let style1 = {
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: '0px',  
+  justifyContent: 'center',
+}
+let style2 = {
+  flex: 'auto',
+  flexDirection: 'inherit',
+  // width: '100%',
+
+  transform: 'scale(0.5) translate(0%, 0%)',
+}
+let style3 = {
+  flex: 'auto',
+  flexDirection: 'inherit',
+  // width: '250%',
+
+  transform: 'scale(0.5) translate(0%, 0%)',
+}
 
 export default function GSA_processorPage () {
   const [priceLists, setPriceLists] = useState(['priceLists'])
@@ -167,11 +190,15 @@ export default function GSA_processorPage () {
   }, [])
 
   return (
-    <div>
-      <h4>Welcome to the GSA_processorPage!</h4>
-      <h6>Choose an option to assess your documents.</h6>
+    <div style={style1}>
+      <div style={style2}>
+      <h4 >Welcome to the GSA_processorPage!</h4>
+      <h6 >Choose an option to assess your documents.</h6>
+      </div>
+     
 
       <ViewSelectionLists
+      style={style2}
         viewProps={{
           filteredPriceLists,
           filteredDocLists,
@@ -181,12 +208,23 @@ export default function GSA_processorPage () {
         }}
       />
       <ViewSelected
+      style={style2}
         viewProps={{
           selectedPriceLists,
           selectedDocsLists,
           selectedFormat,
           updateSelectedPriceLists,
           updateSelectedDocsLists
+        }}
+      />
+      <SelectedFormatTable
+      style={style3}
+        viewProps={{
+          priceLists,
+          docLists,
+          selectedPriceLists,
+          selectedDocsLists,
+          selectedFormat,
         }}
       />
     </div>

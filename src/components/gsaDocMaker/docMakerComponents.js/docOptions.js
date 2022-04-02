@@ -24,7 +24,7 @@ export default function docOptions (
         </li>
       )
     })
-    return <ul>{listItem}</ul>
+    return <ul key={listItem.idKey}>{listItem}</ul>
   }
 
   let mapDocLists = list => {
@@ -43,7 +43,7 @@ export default function docOptions (
         </li>
       )
     })
-    return <ul>{listItem}</ul>
+    return <ul key={listItem.idKey}>{listItem}</ul>
   }
 
   let showPriceLists = mapPriceLists(priceLists)
