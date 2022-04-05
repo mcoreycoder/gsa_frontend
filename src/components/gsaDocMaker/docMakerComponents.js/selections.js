@@ -6,7 +6,7 @@ export default function selections (
   getProductData,
   getDocData
 ) {
-  console.log('selections func')
+  // console.log('selections func')
 
   let mapSelectedPriceLists = list => {
     let listItem = list?.map((el, i) => {
@@ -35,7 +35,7 @@ export default function selections (
           {el.doc_name} - {el.doc_sheet_name}{' '}
           <button
             onClick={e => {
-              console.log('el:', el)
+              // console.log('el:', el)
               e.preventDefault()
               updateSelectedDocsLists(el, 'delete')
             }}

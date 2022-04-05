@@ -95,11 +95,16 @@ export default function GSAdocMaker (props) {
     getProductData,
     getDocData
   )
+
+  // console.log(`props:`, props)
+  let send2MainRouterState = (array)=> props.send2MainRouterState(array)
   let showData = composeData(
     selectedPriceLists,
     docLists, 
     selectedDocsLists,
+    send2MainRouterState
   )
+
 
   
 

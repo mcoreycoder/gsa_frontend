@@ -80,11 +80,11 @@ export default function MainRouterMenu () {
       {/* <h2 style={chooseStyle('/oldgsa')}>
         <Link to='/oldgsa'>Old GSA</Link>
       </h2> */}
-      <h2 style={chooseStyle('/gsa_processor')}>
-        <Link to='/gsa_processor'>GSA_processorPage </Link>
-      </h2>
       <h2 style={chooseStyle('/gsa_doc_maker')}>
         <Link to='/gsa_doc_maker'>GSA Doc Maker</Link>
+      </h2>
+      <h2 style={chooseStyle('/gsa_processor')}>
+        <Link to='/gsa_processor'>GSA_processorPage </Link>
       </h2>
     </header>
   )

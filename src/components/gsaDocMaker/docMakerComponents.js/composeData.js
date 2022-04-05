@@ -3,7 +3,8 @@ import washData from '../gsaDocMakerFunks/washData'
 export default function composeData (
   selectedPriceLists,
   docLists,
-  selectedDocsLists
+  selectedDocsLists,
+  send2MainRouterState
 ) {
   let allProducts = []
   selectedPriceLists.map(priceList => {
@@ -122,8 +123,9 @@ export default function composeData (
       variantDeets: [],
       docDeets: []
     }
-    // console.log(`newProductFormat: `,newProductFormat)
+    // console.log(`newProductFormat start: `,newProductFormat)
 
+    // build variantDeets that have matching _parent_sku prop
     allVariantsWashed.map(variant => {
       if (newProductFormat._parent_sku === variant._parent_sku) {
         // console.log(`variant: `,variant)
@@ -134,16 +136,22 @@ export default function composeData (
       }
       return newProductFormat
     })
-
+    // build docDeets that have matching _parent_sku prop
     allDataWashed.map(docItem => {
       if (newProductFormat._parent_sku === docItem._parent_sku) {
-        return newProductFormat.docDeets = [...newProductFormat.docDeets, docItem]
+        return (newProductFormat.docDeets = [
+          ...newProductFormat.docDeets,
+          docItem
+        ])
       }
       return newProductFormat
     })
-
+    // console.log(`newProductFormat end: `,newProductFormat)
     return newProductFormat
   })
+  // ??? send combinedByPriceListSKU array upto high level state via func call
+  // ??? to be used in other components? Refactor GSA_processorPage to consume this data?
+  // send2MainRouterState(combinedByPriceListSKU)
 
   let showCombinedBySKU = combinedByPriceListSKU?.map((product, i) => {
     let showDocDeets = product.docDeets?.map(docItem => {
@@ -152,14 +160,21 @@ export default function composeData (
         return (
           <div key={i}>
             <div style={{ fontSize: '.59em' }}>
-              {docItem._source}
+              {docItem._source} : {docItem._award_action}
               <br />
-              <p style={{ fontSize: '.59em' }}>{docItem._idKey}</p>{' '}
+              <p style={{ fontSize: '.59em' }}>{docItem._idKey}</p>
             </div>
-            {`${docItem._parent_sku}
-            ${docItem._brand}
-            ${docItem._product_name}
-            ${docItem._msrp}`}
+            {`
+             ${docItem._parent_sku}
+             ${docItem._brand}
+             ${docItem._product_name}
+             ${docItem._msrp}
+            `}<br />
+            <p style={{ fontSize: '.7em' }}>
+             {`DISOUNT PRICE OFFERED TO GSA (excluding IFF): 
+               ${docItem._gsa_price_excluding_IFF}
+             `}
+            </p>
           </div>
         )
       }
@@ -172,15 +187,15 @@ export default function composeData (
           <div key={i}>
             <p style={{ fontSize: '.59em' }}>
               {` 
-          ${variant._source} : ${variant._idKey}
-          `}
+               ${variant._source} : ${variant._idKey}
+              `}
             </p>
             {`
-  ${variant._oldFormat.fullSKU} 
-  ${variant._oldFormat.upc_productname}  
-  ${variant._oldFormat.upc_color} 
-  ${variant._oldFormat.upc_size}
-`}
+             ${variant._oldFormat.fullSKU}
+             ${variant._oldFormat.upc_productname}
+             ${variant._oldFormat.upc_color}
+             ${variant._oldFormat.upc_size}
+            `}
           </div>
         )
       }
@@ -202,6 +217,7 @@ export default function composeData (
             ${product._brand} 
             ${product._product_name}
             ${product._msrp}
+            ${product._gsa_price}
           `}
         </p>
         <div style={{ fontSize: '.8em' }}>{showDocDeets}</div>
@@ -216,6 +232,9 @@ export default function composeData (
   return (
     <div>
       hello from composeData
+      <button onClick={() => send2MainRouterState(combinedByPriceListSKU)}>
+        Submit Data
+      </button>
       {/* {showAllProducts} */}
       {/* {showAllVariants} */}
       {/* {showAllData} */}

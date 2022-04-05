@@ -23,14 +23,14 @@ export default function SelectedFormatTable (props) {
   let selectedFormatDocObjMap = docLists.find(
     el => el?.idKey === selectedFormat?.idKey
   ) // doc obj in docLists state //find on docList for match on idKey and isolate doc
-  console.log(`selectedFormatDocObjMap: `, selectedFormatDocObjMap) // header_columns is obj from prop on doc obj in docLists state
+  // console.log(`selectedFormatDocObjMap: `, selectedFormatDocObjMap) // header_columns is obj from prop on doc obj in docLists state
 
   let header_columns = selectedFormatDocObjMap?.header_columns
-  console.log(`header_columns: `, header_columns) // header_columns is obj from prop on doc obj in docLists state
+  // console.log(`header_columns: `, header_columns) // header_columns is obj from prop on doc obj in docLists state
 
   let columnKeys =
     header_columns === undefined ? null : Object.keys(header_columns) // used to map rows by prop by using header_columns[headerNum] or data[headerNum]
-  console.log(`columnKeys: `, columnKeys)
+  // console.log(`columnKeys: `, columnKeys)
 
   let mapTableHeader = (columnKeys, header_columns, selectedFormatDocObjMap) => {
     //map columnKeys to tableHeaders accessing the obj prop(headerNum) on header_columns obj returning <th key={headerNum}>{header_columns[headerNum]}</th>
@@ -55,8 +55,8 @@ export default function SelectedFormatTable (props) {
       }
       return (docsArray = [...docsArray, el])
     })
-    console.log(`docsArray: `, docsArray)
-    console.log(`selectedDocObj: `, selectedDocObj)
+    // console.log(`docsArray: `, docsArray)
+    // console.log(`selectedDocObj: `, selectedDocObj)
 // thinking I need to washData() to standardize it, like on combinedByPriceListSKU from composeData, should look to address newFormat to include oldFormat prop for original product format?
 // maybe pass combinedByPriceListSKU from composeData up to higher state to be used by this component
 // if using combinedByPriceListSKU note oldFormat prop for original product format but note headerNums may not align if selected format is off, use _propName for mapping to new output 

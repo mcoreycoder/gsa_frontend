@@ -25,7 +25,7 @@ export default function ViewSelected (props) {
     let selectedFormat = props.viewProps.selectedFormat
     let updateSelectedPriceLists = props.viewProps.updateSelectedPriceLists
     let updateSelectedDocsLists = props.viewProps.updateSelectedDocsLists
-    console.log("ViewSelected selectedFormat:",selectedFormat)
+    // console.log("ViewSelected selectedFormat:",selectedFormat)
 
     let mapSelectedPriceLists = list => {
       let listItem = list?.map((el, i) => {
@@ -74,7 +74,7 @@ export default function ViewSelected (props) {
             {formatObj.doc_name} - {formatObj.doc_sheet_name}
             <button
               onClick={e => {
-                  console.log("formatObj:",formatObj)
+                  // console.log("formatObj:",formatObj)
                 e.preventDefault()
                 updateSelectedDocsLists(formatObj, 'select format')
               }}

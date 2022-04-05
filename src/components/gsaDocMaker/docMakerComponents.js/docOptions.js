@@ -6,7 +6,7 @@ export default function docOptions (
   updateSelectedPriceLists,
   updateSelectedDocsLists
 ) {
-  console.log('docOptions func')
+  // console.log('docOptions func')
 
   let mapPriceLists = list => {
     let listItem = list?.map((el, i) => {
