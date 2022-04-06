@@ -433,7 +433,7 @@ export default function GSA_processorPage (props) {
       // console.log(`el._brand: ${el._brand}`)
       // console.log(`props.combinedByPriceListSKU: ${props.combinedByPriceListSKU.length}`)
       return foundDocInProps
-        ? (inPropsArr = [...inPropsArr, el])
+        ? (inPropsArr = [...inPropsArr, el],tempArr = [...tempArr, el])
         : (tempArr = [...tempArr, el])
     })
     let setIt = (tempArr, inPropsArr) => (

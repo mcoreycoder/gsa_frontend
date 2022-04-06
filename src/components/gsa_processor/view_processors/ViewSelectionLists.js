@@ -32,15 +32,15 @@ export default function ViewSelectionLists (props) {
     let listItems = list?.map((el, i) => {
       return (
         <li key={i}>
-          <button
+          {/* <button
             onClick={e => {
               //   console.log("el:",el)
               e.preventDefault()
               updateSelectedPriceLists(el)
             }}
-          >
+          > */}
             {el.brand}
-          </button>
+          {/* </button> */}
         </li>
       )
     })
@@ -51,15 +51,15 @@ export default function ViewSelectionLists (props) {
     let listItem = list?.map((el, i) => {
       return (
         <li key={i}>
-          <button
+          {/* <button
             onClick={e => {
               e.preventDefault()
               updateSelectedDocsLists(el, 'add selection')
             }}
-          >
+          > */}
             {el.doc_name}
             {el.doc_sheet_name}
-          </button>
+          {/* </button> */}
         </li>
       )
     })
@@ -114,10 +114,10 @@ export default function ViewSelectionLists (props) {
 
   return (
     <div style={style1}>
-      <div style={style2}>Load Price Lists Data:</div>
+      <div style={style2}>Missing Price Lists Data:</div>
       <div style={style2}>{showPriceLists}</div>
 
-      <div style={style2}>Load Document Data:</div>
+      <div style={style2}>Missing Document Data:</div>
       <div style={style2}>{showDocLists}</div>
 
       <div style={style2}>Select Table Format:</div>

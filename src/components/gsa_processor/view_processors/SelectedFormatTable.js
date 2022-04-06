@@ -86,7 +86,7 @@ export default function SelectedFormatTable (props) {
 
   return (
     <div >
-      {`Hello from SelectedFormatTable`}
+      Hello from SelectedFormatTable
       <div style={style2}>
         <div>
           selectedPriceLists.length:{' '}
