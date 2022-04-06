@@ -114,7 +114,9 @@ export default function GSA_processorPage (props) {
   let sortCurrentGSAskus = singleSkuArray => {
     let currentGSAskus = []
     singleSkuArray.map(item => {
-      if (item.docDeets?.length > 0) {
+      if (item.docDeets?.length > 0) { 
+        // could also look to evaluate based on a specific "MASTER" doc, 
+        // currently using the dataSortingEPA which should reflect all current skus?
         currentGSAskus = [...currentGSAskus, item]
       }
       return currentGSAskus
@@ -407,7 +409,7 @@ export default function GSA_processorPage (props) {
     let inPropsArr = []
     let docDeets_idKeyArr = [] //ex: "1WGfBmKDiFdPfwjh8nmqxJI9VJJZ1I2S6BdwQbzmvPwE-PRODUCTS WITH DISCOUNT (A)-Data Sorting with notes for Decrease EPA MOD - Copy of MOD_ Price Proposal Template PRODUCTS Refresh 9 (google format)"
     props.combinedByPriceListSKU.map(sku => {
-      sku.docDeets.map(doc => {
+      sku?.docDeets?.map(doc => {
         let docKey = doc._idKey//.split("-")[0]
         let existing_idKey = docDeets_idKeyArr.find(key => key === docKey)
         // console.log(`existing_idKey: ${existing_idKey}`)
@@ -418,7 +420,6 @@ export default function GSA_processorPage (props) {
       return docDeets_idKeyArr
     })
     // console.log(`docDeets_idKeyArr: ${docDeets_idKeyArr}`)
-
     response.map(el => {
       el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
       // console.log(`el.docSheetId: ${el.docSheetId}`)

@@ -32,7 +32,7 @@ export default function ViewSelected (props) {
         return (
           <li key={i}>
             {el.brand}
-            <button
+            {/* <button
               onClick={e => {
                 //   console.log("el:",el)
                 e.preventDefault()
@@ -40,7 +40,7 @@ export default function ViewSelected (props) {
               }}
             >
               Remove
-            </button>
+            </button> */}
           </li>
         )
       })
@@ -52,7 +52,7 @@ export default function ViewSelected (props) {
         return (
           <li key={i}>
             {el.doc_name} - {el.doc_sheet_name}
-            <button
+            {/* <button
               onClick={e => {
                 //   console.log("el:",el)
                 e.preventDefault()
@@ -60,7 +60,7 @@ export default function ViewSelected (props) {
               }}
             >
               Remove
-            </button>
+            </button> */}
           </li>
         )
       })
@@ -72,7 +72,7 @@ export default function ViewSelected (props) {
         if(formatObj === undefined){return <div>No format selected</div> }
       let listItem = <li key={"formatObj"}>
             {formatObj.doc_name} - {formatObj.doc_sheet_name}
-            <button
+            {/* <button
               onClick={e => {
                   // console.log("formatObj:",formatObj)
                 e.preventDefault()
@@ -80,7 +80,7 @@ export default function ViewSelected (props) {
               }}
             >
               Remove
-            </button>
+            </button> */}
           </li>
       return <ul>{listItem}</ul>
     }

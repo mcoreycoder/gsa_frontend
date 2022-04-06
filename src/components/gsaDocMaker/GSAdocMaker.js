@@ -30,7 +30,7 @@ export default function GSAdocMaker (props) {
               .split('/edit')[0],
             brand: newlySelected.brand,
             displayProducts: true,
-            hasProducts: await getProductData([newlySelected.brand]).then(res => res)
+            // hasProducts: await getProductData([newlySelected.brand]).then(res => res)
           }
     if (selectedPriceLists[0] === 'selectedPriceLists') {
       newListArray = [newObj]
@@ -42,11 +42,16 @@ export default function GSAdocMaker (props) {
     if (newListArray[0] === undefined) {
       newListArray[0] = 'selectedPriceLists'
     }
-    return setSelectedPriceLists(newListArray)
-  }
+    setSelectedPriceLists(newListArray)
+    newObj.hasProducts = await getProductData([newlySelected.brand]).then(
+      res => res
+    )
+    newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
+    newListArray = [...newListArray, newObj]
+    return setSelectedPriceLists(newListArray)  }
 
   let updateSelectedDocsLists = async (newlySelected, action) => {
-    let newList
+    let newListArray
     let newObj =
       action === 'delete'
         ? newlySelected
@@ -55,23 +60,34 @@ export default function GSAdocMaker (props) {
             doc_name: newlySelected.doc_name,
             doc_sheet_name: newlySelected.doc_sheet_name,
             displayProducts: true,
-            hasData: await getDocData(JSON.stringify({
-              docSheetId: newlySelected.docSheetId,
-              doc_sheet_name: newlySelected.doc_sheet_name
-            })).then(res => res)
+            // hasData: await getDocData(JSON.stringify({
+            //   docSheetId: newlySelected.docSheetId,
+            //   doc_sheet_name: newlySelected.doc_sheet_name
+            // })).then(res => res)
           }
     if (selectedDocsLists[0] === 'selectedDocsLists') {
-      newList = [newObj]
+      newListArray = [newObj]
     } else {
       action === 'delete'
-        ? (newList = selectedDocsLists.filter(el => el !== newObj))
-        : (newList = [...selectedDocsLists, newObj])
+        ? (newListArray = selectedDocsLists.filter(el => el !== newObj))
+        : (newListArray = [...selectedDocsLists, newObj])
     }
-    if (newList[0] === undefined) {
-      newList[0] = 'selectedDocsLists'
+    if (newListArray[0] === undefined) {
+      newListArray[0] = 'selectedDocsLists'
     }
-    return setSelectedDocsLists(newList)
-  }
+    setSelectedDocsLists(newListArray)
+
+    newObj.hasData = await getDocData(
+      JSON.stringify({
+        docSheetId: newlySelected.docSheetId,
+        doc_sheet_name: newlySelected.doc_sheet_name
+      })
+    ).then(res => res)
+    newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
+
+    newListArray = [...newListArray, newObj]
+
+    return setSelectedDocsLists(newListArray)  }
 
   let filterOptionsbySelected = (optionsList, selectedList) => {
     let filteredOptions = optionsList.filter(el => {
