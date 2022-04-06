@@ -158,7 +158,7 @@ export default function composeData (
       // console.log('docItem:', docItem)
       if (docItem !== undefined) {
         return (
-          <div key={i}>
+          <div key={i+docItem._source}>
             <div style={{ fontSize: '.59em' }}>
               {docItem._source} : {docItem._award_action}
               <br />
