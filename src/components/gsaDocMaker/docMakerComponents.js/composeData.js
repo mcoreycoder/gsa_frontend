@@ -127,7 +127,10 @@ export default function composeData (
 
     // build variantDeets that have matching _parent_sku prop
     allVariantsWashed.map(variant => {
-      if (newProductFormat._parent_sku === variant._parent_sku) {
+      if (
+        newProductFormat._parent_sku === variant._parent_sku &&
+        newProductFormat._idKey === variant._idKey
+      ) {
         // console.log(`variant: `,variant)
         return (newProductFormat.variantDeets = [
           ...newProductFormat.variantDeets,
@@ -158,7 +161,7 @@ export default function composeData (
       // console.log('docItem:', docItem)
       if (docItem !== undefined) {
         return (
-          <div key={i+docItem._source}>
+          <div key={i + docItem._source}>
             <div style={{ fontSize: '.59em' }}>
               {docItem._source} : {docItem._award_action}
               <br />
@@ -169,9 +172,10 @@ export default function composeData (
              ${docItem._brand}
              ${docItem._product_name}
              ${docItem._msrp}
-            `}<br />
+            `}
+            <br />
             <p style={{ fontSize: '.7em' }}>
-             {`DISOUNT PRICE OFFERED TO GSA (excluding IFF): 
+              {`DISOUNT PRICE OFFERED TO GSA (excluding IFF): 
                ${docItem._gsa_price_excluding_IFF}
              `}
             </p>

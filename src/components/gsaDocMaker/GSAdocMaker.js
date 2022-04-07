@@ -19,6 +19,14 @@ export default function GSAdocMaker (props) {
     `selectedDocsLists`
   ])
 
+  let consumePropsToState = async() => {
+    setPriceLists(props.priceLists)
+    setSelectedPriceLists(props.selectedPriceLists)
+    setDocLists(props.docLists)
+    setSelectedDocsLists(props.selectedDocsLists)
+    // return reduceToSingleSkuList(props.combinedByPriceListSKU)
+  }
+
   let updateSelectedPriceLists = async (newlySelected, action) => {
     let newListArray
     let newObj =
@@ -83,11 +91,11 @@ export default function GSAdocMaker (props) {
         doc_sheet_name: newlySelected.doc_sheet_name
       })
     ).then(res => res)
+    
     newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
-
     newListArray = [...newListArray, newObj]
-
-    return setSelectedDocsLists(newListArray)  }
+    return setSelectedDocsLists(newListArray)  
+  }
 
   let filterOptionsbySelected = (optionsList, selectedList) => {
     let filteredOptions = optionsList.filter(el => {
@@ -113,7 +121,7 @@ export default function GSAdocMaker (props) {
   )
 
   // console.log(`props:`, props)
-  let send2MainRouterState = (array)=> props.send2MainRouterState(array)
+  let send2MainRouterState = (combinedByPriceListSKUarray)=> props.send2MainRouterState(combinedByPriceListSKUarray, priceLists, selectedPriceLists, docLists, selectedDocsLists)
   let showData = composeData(
     selectedPriceLists,
     docLists, 
@@ -127,6 +135,8 @@ export default function GSAdocMaker (props) {
   useEffect(() => {
     let mounted = true
     if (mounted) {
+      props.priceLists[0] !== "priceLists" ?
+      consumePropsToState():
       getPriceLists().then(response => {
         let tempArr = response.map(el => {
           el.idKey = `${el.google_price_list_file

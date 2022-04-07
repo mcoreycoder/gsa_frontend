@@ -12,6 +12,14 @@ export default function MainRouter () {
   const [combinedByPriceListSKU, setByPriceLists] = useState([
     'combinedByPriceListSKU'
   ])
+  const [priceLists, setPriceLists] = useState(['priceLists'])
+  const [selectedPriceLists, setSelectedPriceLists] = useState([
+    'selectedPriceLists'
+  ])
+  const [docLists, setDocLists] = useState(['docLists'])
+  const [selectedDocsLists, setSelectedDocsLists] = useState([
+    'selectedDocsLists'
+  ])
 
   let navMenu = {
     position: 'sticky',
@@ -23,7 +31,19 @@ export default function MainRouter () {
     // transform: "scale(0.5) translate(-90%, -15%)",
   }
 
-  let send2MainRouterState = array => setByPriceLists(array)
+  let send2MainRouterState = (
+    combinedByPriceListSKUarray,
+    priceLists,
+    selectedPriceLists,
+    docLists,
+    selectedDocsLists
+  ) => {
+    setByPriceLists(combinedByPriceListSKUarray)
+    setPriceLists(priceLists)
+    setSelectedPriceLists(selectedPriceLists)
+    setDocLists(docLists)
+    setSelectedDocsLists(selectedDocsLists)
+  }
 
   return (
     <div>
@@ -37,9 +57,31 @@ export default function MainRouter () {
           {/* <Route path='/rfq' render={()=> (<RFQ2 myProps={myProps} />)} />  */}
 
           {/* <Route path='/gsa_doc_maker' component={GSAdocMaker} /> */}
-          <Route path='/gsa_doc_maker' render={()=> (<GSAdocMaker send2MainRouterState={send2MainRouterState} />)} /> 
+          <Route
+            path='/gsa_doc_maker'
+            render={() => (
+              <GSAdocMaker
+                send2MainRouterState={send2MainRouterState}
+                priceLists={priceLists}
+                selectedPriceLists={selectedPriceLists}
+                docLists={docLists}
+                selectedDocsLists={selectedDocsLists}
+              />
+            )}
+          />
           {/* <Route path='/gsa_processor' component={GSA_processorPage} /> */}
-          <Route path='/gsa_processor' render={()=> (<GSA_processorPage combinedByPriceListSKU={combinedByPriceListSKU} />)} /> 
+          <Route
+            path='/gsa_processor'
+            render={() => (
+              <GSA_processorPage
+                combinedByPriceListSKU={combinedByPriceListSKU}
+                priceLists={priceLists}
+                selectedPriceLists={selectedPriceLists}
+                docLists={docLists}
+                selectedDocsLists={selectedDocsLists}
+              />
+            )}
+          />
 
           <Route path='/pricelists' component={PriceLists} />
           <Route path='/oldgsa' component={OldGSA} />

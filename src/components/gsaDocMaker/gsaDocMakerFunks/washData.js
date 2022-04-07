@@ -56,7 +56,7 @@ export default function washData (array, string) {
       _idKey: product.idKey,
       _brand: product.brand,
       _parent_sku: product.upc_parent_sku,
-      _product_name: product.upc_product_name,
+      _product_name: product.upc_productname,
       _wholesale: product.upc_whls,
       _msrp: product.upc_msrp,
       _upc_a: product.upc_upc,
@@ -80,7 +80,7 @@ export default function washData (array, string) {
         _brand: product.header_column_2,
         _product_name: product.header_column_3,
         _msrp: product.header_column_4,
-        _award_action: product.header_column_4
+        _award_action: product.header_column_5
       }
       return formatedProduct
     }
@@ -189,7 +189,7 @@ export default function washData (array, string) {
           ...formatedProduct,
           _source: 'IPRICE',
           _contract_num: product.header_column_1,
-          _vendor_part_num: product.header_column_2,
+          _parent_sku: product.header_column_2,
           _brand: product.header_column_3,
           _gsa_price_including_IFF: product.header_column_4,
           _temp_price: product.header_column_5,
@@ -206,7 +206,7 @@ export default function washData (array, string) {
           _source: 'IOPTIONS',
           // todo below assign <propNames>
           _contract_num: product.header_column_1,
-          _vendor_part_num: product.header_column_2,
+          _parent_sku: product.header_column_2,
           _brand: product.header_column_3,
           _opt_part: product.header_column_4, // may need to change to upc_fullsku and color/size detail
           _group: product.header_column_5,

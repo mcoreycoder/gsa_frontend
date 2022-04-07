@@ -30,25 +30,21 @@ let style3 = {
   flexDirection: 'inherit',
   // width: '250%',
 
-  transform: 'scale(0.5) translate(0%, 0%)'
+  transform: 'scale(0.5) translate(0%, 0%)',
 }
 
 export default function GSA_processorPage (props) {
-  const [priceLists, setPriceLists] = useState(['priceLists'])
-  const [docLists, setDocLists] = useState(['docsLists'])
-  const [selectedPriceLists, setSelectedPriceLists] = useState([
-    `selectedPriceLists`
-  ])
-  const [selectedDocsLists, setSelectedDocsLists] = useState([
-    `selectedDocsLists`
-  ])
+  const [priceLists, setPriceLists] = useState([])
+  const [docLists, setDocLists] = useState([])
+  const [selectedPriceLists, setSelectedPriceLists] = useState([])
+  const [selectedDocsLists, setSelectedDocsLists] = useState([])
   const [singleSkuList, setSingleSkuList] = useState([])
-  const [gsa_sku_data, setGSA_sku_data] = useState([])
+  const [gsa_sku_data, setGSA_sku_data] = useState(['gsa_sku_data'])
   const [add_gsa_skus, setAdd_gsa_skus] = useState([])
   const [delete_gsa_skus, setDelete_gsa_skus] = useState([])
   const [priceChange_gsa_skus, setPriceChange_gsa_skus] = useState([])
   const [BrandPriceListObj, setBrandPriceListObj] = useState({})
-
+  
   let reduceToSingleSkuList = props_array => {
     let newArray = []
     props_array.map(item => {
@@ -283,12 +279,12 @@ export default function GSA_processorPage (props) {
       selectedPriceLists[0] === 'selectedPriceLists'
         ? (newListArray = [newObj])
         : (newListArray = [...selectedPriceLists, newObj])
-      setSelectedPriceLists(newListArray)
-      newObj.hasProducts = await getProductData([newlySelected.brand]).then(
-        res => res
-      )
-      newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
-      newListArray = [...newListArray, newObj]
+      // setSelectedPriceLists(newListArray)
+      // newObj.hasProducts = await getProductData([newlySelected.brand]).then(
+      //   res => res
+      // )
+      // newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
+      // newListArray = [...newListArray, newObj]
       return setSelectedPriceLists(newListArray)
     }
     return console.log('end updateSelectedPriceLists()')
@@ -342,17 +338,17 @@ export default function GSA_processorPage (props) {
           ? [newObj]
           : [...selectedDocsLists, newObj]
 
-      setSelectedDocsLists(newListArray)
+      // setSelectedDocsLists(newListArray)
 
-      newObj.hasData = await getDocData(
-        JSON.stringify({
-          docSheetId: newlySelected.docSheetId,
-          doc_sheet_name: newlySelected.doc_sheet_name
-        })
-      ).then(res => res)
-      newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
+      // newObj.hasData = await getDocData(
+      //   JSON.stringify({
+      //     docSheetId: newlySelected.docSheetId,
+      //     doc_sheet_name: newlySelected.doc_sheet_name
+      //   })
+      // ).then(res => res)
+      // newListArray = newListArray.filter(el => el.idKey !== newObj.idKey)
 
-      newListArray = [...newListArray, newObj]
+      // newListArray = [...newListArray, newObj]
 
       return setSelectedDocsLists(newListArray)
     }
@@ -361,7 +357,7 @@ export default function GSA_processorPage (props) {
   }
 
   let filterOptionsbySelected = (optionsList, selectedList) => {
-    let filteredOptions = optionsList.filter(el => {
+    let filteredOptions = optionsList?.filter(el => {
       let found = selectedList?.find(selection => selection.idKey === el.idKey)
       //   console.log('found: ',found)
       return el.idKey !== found?.idKey
@@ -377,94 +373,121 @@ export default function GSA_processorPage (props) {
   )
   let filteredDocLists = filterOptionsbySelected(docLists, selectedDocsLists)
 
-  let sortPriceListPropSelections = response => {
-    let tempArr = []
-    let inPropsArr = []
+  // let sortPriceListPropSelections = response => {
+  //   let tempArr = []
+  //   let inPropsArr = []
 
-    response.map(el => {
-      el.idKey = `${
-        el.google_price_list_file
-          .replaceAll('https://docs.google.com/spreadsheets/d/', '')
-          .split('/edit')[0]
-      }`
+  //   response.map(el => {
+  //     el.idKey = `${
+  //       el.google_price_list_file
+  //         .replaceAll('https://docs.google.com/spreadsheets/d/', '')
+  //         .split('/edit')[0]
+  //     }`
 
-      let foundBrandInProps = props.combinedByPriceListSKU.find(
-        sku => sku._brand === el.brand
-      )
-      // console.log(`foundBrandInProps: ${foundBrandInProps?._brand}`)
-      // console.log(`el._brand: ${el._brand}`)
-      // console.log(`props.combinedByPriceListSKU: ${props.combinedByPriceListSKU.length}`)
-      return foundBrandInProps
-        ? ((inPropsArr = [...inPropsArr, el]), (tempArr = [...tempArr, el]))
-        : (tempArr = [...tempArr, el])
-    })
-    let setIt = (tempArr, inPropsArr) => (
-      setPriceLists(tempArr), setSelectedPriceLists(inPropsArr)
-    )
-    return setIt(tempArr, inPropsArr)
-  }
+  //     let foundBrandInProps = props.combinedByPriceListSKU.find(
+  //       sku => sku._brand === el.brand
+  //     )
+  //     // console.log(`foundBrandInProps: ${foundBrandInProps?._brand}`)
+  //     // console.log(`el._brand: ${el._brand}`)
+  //     // console.log(`props.combinedByPriceListSKU: ${props.combinedByPriceListSKU.length}`)
+  //     return foundBrandInProps
+  //       ? ((inPropsArr = [...inPropsArr, el]), (tempArr = [...tempArr, el]))
+  //       : (tempArr = [...tempArr, el])
+  //   })
+  //   let setIt = (tempArr, inPropsArr) => (
+  //     setPriceLists(tempArr), setSelectedPriceLists(inPropsArr)
+  //   )
+  //   return setIt(tempArr, inPropsArr)
+  // }
+let break_between_commentedOut_funcs
+  // let sortDocsListPropSelections = response => {
+  //   let tempArr = []
+  //   let inPropsArr = []
+  //   let docDeets_idKeyArr = [] //ex: "1WGfBmKDiFdPfwjh8nmqxJI9VJJZ1I2S6BdwQbzmvPwE-PRODUCTS WITH DISCOUNT (A)-Data Sorting with notes for Decrease EPA MOD - Copy of MOD_ Price Proposal Template PRODUCTS Refresh 9 (google format)"
+  //   props.combinedByPriceListSKU.map(sku => {
+  //     sku?.docDeets?.map(doc => {
+  //       let docKey = doc._idKey//.split("-")[0]
+  //       let existing_idKey = docDeets_idKeyArr.find(key => key === docKey)
+  //       // console.log(`existing_idKey: ${existing_idKey}`)
+  //       return existing_idKey
+  //         ? docDeets_idKeyArr
+  //         : (docDeets_idKeyArr = [...docDeets_idKeyArr, docKey])
+  //     })
+  //     return docDeets_idKeyArr
+  //   })
+  //   // console.log(`docDeets_idKeyArr: ${docDeets_idKeyArr}`)
+  //   response.map(el => {
+  //     el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
+  //     // console.log(`el.docSheetId: ${el.docSheetId}`)
 
-  let sortDocsListPropSelections = response => {
-    let tempArr = []
-    let inPropsArr = []
-    let docDeets_idKeyArr = [] //ex: "1WGfBmKDiFdPfwjh8nmqxJI9VJJZ1I2S6BdwQbzmvPwE-PRODUCTS WITH DISCOUNT (A)-Data Sorting with notes for Decrease EPA MOD - Copy of MOD_ Price Proposal Template PRODUCTS Refresh 9 (google format)"
-    props.combinedByPriceListSKU.map(sku => {
-      sku?.docDeets?.map(doc => {
-        let docKey = doc._idKey//.split("-")[0]
-        let existing_idKey = docDeets_idKeyArr.find(key => key === docKey)
-        // console.log(`existing_idKey: ${existing_idKey}`)
-        return existing_idKey
-          ? docDeets_idKeyArr
-          : (docDeets_idKeyArr = [...docDeets_idKeyArr, docKey])
-      })
-      return docDeets_idKeyArr
-    })
-    // console.log(`docDeets_idKeyArr: ${docDeets_idKeyArr}`)
-    response.map(el => {
-      el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
-      // console.log(`el.docSheetId: ${el.docSheetId}`)
+  //     let foundDocInProps = docDeets_idKeyArr.find(key => key === `${el.docSheetId}-${el.doc_sheet_name}-${el.doc_name}`)
+  //     // console.log(`foundDocInProps: ${foundDocInProps}`)
+  //     // console.log(`el.docSheetId: ${el.docSheetId}`)
 
-      let foundDocInProps = docDeets_idKeyArr.find(key => key === `${el.docSheetId}-${el.doc_sheet_name}-${el.doc_name}`)
-      // console.log(`foundDocInProps: ${foundDocInProps}`)
-      // console.log(`el.docSheetId: ${el.docSheetId}`)
-
-      //        return foundInDocDeets?._idKey === el?.idKey
-      //       })
-      // console.log(`foundDocInProps: ${foundDocInProps?._idKey}`)
-      // console.log(`el._brand: ${el._brand}`)
-      // console.log(`props.combinedByPriceListSKU: ${props.combinedByPriceListSKU.length}`)
-      return foundDocInProps
-        ? (inPropsArr = [...inPropsArr, el],tempArr = [...tempArr, el])
-        : (tempArr = [...tempArr, el])
-    })
-    let setIt = (tempArr, inPropsArr) => (
-      setDocLists(tempArr), setSelectedDocsLists(inPropsArr)
-    )
-    return setIt(tempArr, inPropsArr)
+  //     //        return foundInDocDeets?._idKey === el?.idKey
+  //     //       })
+  //     // console.log(`foundDocInProps: ${foundDocInProps?._idKey}`)
+  //     // console.log(`el._brand: ${el._brand}`)
+  //     // console.log(`props.combinedByPriceListSKU: ${props.combinedByPriceListSKU.length}`)
+  //     return foundDocInProps
+  //       ? (inPropsArr = [...inPropsArr, el],tempArr = [...tempArr, el])
+  //       : (tempArr = [...tempArr, el])
+  //   })
+  //   let setIt = (tempArr, inPropsArr) => (
+  //     setDocLists(tempArr), setSelectedDocsLists(inPropsArr)
+  //   )
+  //   return setIt(tempArr, inPropsArr)
+  // }
+  let consumePropsToState = async() => {
+    setPriceLists(props.priceLists)
+    setSelectedPriceLists(props.selectedPriceLists)
+    setDocLists(props.docLists)
+    setSelectedDocsLists(props.selectedDocsLists)
+    return reduceToSingleSkuList(props.combinedByPriceListSKU)
   }
 
   useEffect(() => {
     let mounted = true
     if (mounted) {
-      getPriceLists().then(response => {
-        sortPriceListPropSelections(response)
-      })
+      // getPriceLists().then(response => {
+      //   sortPriceListPropSelections(response)
+      // })
 
-      getDocsLists()
-        .then(response => {
-          // let tempArr = response.map(el => {
-          //   el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
-          //   return el
-          // })
-          // return setDocLists(tempArr)
-          sortDocsListPropSelections(response)
-        })
-        .then(() => reduceToSingleSkuList(props.combinedByPriceListSKU))
+      // getDocsLists()
+      //   .then(response => {
+      //     let tempArr = response.map(el => {
+      //       el.idKey = `${el.docSheetId}-${el.doc_sheet_name}`
+      //       return el
+      //     })
+      //     return setDocLists(tempArr)
+      //     // sortDocsListPropSelections(response)
+      //   })
+      //   .then(() => reduceToSingleSkuList(props.combinedByPriceListSKU))
+      //   .then(singleSkuArray => sortCurrentGSAskus(singleSkuArray))
+      //   .then(singleSkuArray => sortByAction(singleSkuArray))
+      //   .then(actions =>
+      //     console.log(
+      //       `count of items by action\n 
+      //       addSkus:${actions.addSkus.length},\n 
+      //       deleteSkus:${actions.deleteSkus.length},\n 
+      //       priceChangeSkus:${actions.priceChangeSkus.length}`
+      //     )
+      //   )
+
+      // setPriceLists(props.priceLists)
+      // setSelectedPriceLists(props.selectedPriceLists)
+      // setDocLists(props.docsLists)
+      // setSelectedDocsLists(props.selectedDocsLists)
+      // reduceToSingleSkuList(props.combinedByPriceListSKU)
+      // sortCurrentGSAskus(singleSkuArray)
+      // sortByAction(singleSkuArray)
+      consumePropsToState()
         .then(singleSkuArray => sortCurrentGSAskus(singleSkuArray))
         .then(singleSkuArray => sortByAction(singleSkuArray))
         .then(actions =>
           console.log(
             `count of items by action\n 
+            ${Object.keys(BrandPriceListObj)}\n 
             addSkus:${actions.addSkus.length},\n 
             deleteSkus:${actions.deleteSkus.length},\n 
             priceChangeSkus:${actions.priceChangeSkus.length}`
@@ -508,6 +531,7 @@ export default function GSA_processorPage (props) {
           docLists,
           selectedPriceLists,
           selectedDocsLists,
+          gsa_sku_data,
           selectedFormat
         }}
       />

@@ -20,7 +20,7 @@ export default function selections (
               updateSelectedPriceLists(el, 'delete')
             }}
           >
-            Remove
+            {!el.hasProducts ? 'Loading data...' : 'Remove'}
           </button>
         </li>
       )
@@ -40,7 +40,7 @@ export default function selections (
               updateSelectedDocsLists(el, 'delete')
             }}
           >
-            Remove
+            {!el.hasData ? 'Loading data...' : 'Remove'}
           </button>
         </li>
       )
