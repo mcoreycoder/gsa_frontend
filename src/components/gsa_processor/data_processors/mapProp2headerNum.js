@@ -30,11 +30,11 @@ export default function mapProp2headerNum (item, docLists, selectedDocObj) {
         header_column_2: targetPPT._parent_sku,
         header_column_3: targetPPT._brand,
         header_column_4: targetPPT._gsa_price_including_IFF,
-        header_column_5: targetPPT._temp_price,
+        header_column_5: 0, //targetPPT._temp_price,
         header_column_6: targetPPT._temp_price_start,
         header_column_7: targetPPT._temp_price_end,
         header_column_8: targetPPT._msrp,
-        header_column_9: targetPPT._zone_num
+        header_column_9: `00`,// targetPPT._zone_num
       }
     }
 
@@ -54,8 +54,12 @@ export default function mapProp2headerNum (item, docLists, selectedDocObj) {
               return "MultiCam Classic"
           }
       }
+
       let upc_color = item._brand === "ARROWHEAD 2022" ? checkColor(targetVariant_oldFormat?.fullSKU) : targetVariant_oldFormat?.upc_color
       let combinedColorSizeFullSKU = `${upc_color} / ${targetVariant_oldFormat?.upc_size} - ${targetVariant_oldFormat?.fullSKU}`
+      let suunto_opt_part = `Suunto ${item?._product_name}`
+      let checkSkuFormat = item._brand.includes('Suunto 2020') ? suunto_opt_part :combinedColorSizeFullSKU
+
       let create_opt_code = targetedVariant => {
         let item_variant_array = item.variantDeets.filter(el => {
           return el._oldFormat._parent_sku === targetedVariant?._parent_sku
@@ -64,14 +68,16 @@ export default function mapProp2headerNum (item, docLists, selectedDocObj) {
           return el._oldFormat.fullSKU === targetedVariant?.fullSKU
         })
         console.log(`index: ${index}`)
-        return index === 0 ? 'I' : 'S'
+        return index <= 0 ? 'I' : 'S'
       }
       let check4PriceDiff = () => {
-        var regex = /\d+/
-        let variantPrice = targetVariant_oldFormat?.upc_msrp.match(regex)
-        let itemPrice = item._msrp.match(regex)
-        let priceDiff = variantPrice? variantPrice - itemPrice : "ssame"
-        // console.log(`${variantPrice} - ${itemPrice} = ${priceDiff}`)
+        // var regex = /\d+/g
+        // let variantPrice = targetVariant_oldFormat?.upc_msrp?.replace(/[^0-9.]+/g, "")
+        let variantPrice = targetVariant_oldFormat?.upc_whls?.replace(/[^0-9.]+/g, "")
+        // let itemPrice = item._msrp.replace(/[^0-9.]+/g, "")
+        let itemPrice = item._wholesale.replace(/[^0-9.]+/g, "")
+        let priceDiff = variantPrice? Math.round(parseFloat(variantPrice - itemPrice)).toFixed(2) : 0
+        console.log(`${variantPrice} - ${itemPrice} = ${priceDiff}`)
         return priceDiff
       }
 
@@ -79,13 +85,13 @@ export default function mapProp2headerNum (item, docLists, selectedDocObj) {
         header_column_1: targetPPT._contract_num,
         header_column_2: targetPPT._parent_sku,
         header_column_3: targetPPT._brand,
-        header_column_4: combinedColorSizeFullSKU, // may need to change to upc_fullsku and color/size detail
+        header_column_4: checkSkuFormat, // may need to change to upc_fullsku and color/size detail
         header_column_5: `COLOR / SIZE`, // was set at (targetPPT._group,)
         header_column_6: create_opt_code(targetVariant_oldFormat), // was set at (targetPPT._opt_code,) // either an "I" or "S"
         header_column_7: `1`, // was set at (targetPPT._opt_qty,)
         header_column_8: targetPPT._uoi, // was set at (targetPPT._opt_unit,) // may just be _uoi
         header_column_9: check4PriceDiff(), // was set at (targetPPT._opt_price,) //may need to change to (_upc_msrp - _msrp)
-        header_column_10: combinedColorSizeFullSKU, // was set at (targetPPT._opt_desc,) // my just be same as _opt_part
+        header_column_10: checkSkuFormat, // was set at (targetPPT._opt_desc,) // my just be same as _opt_part
         header_column_11: item._brand, // was set at (targetPPT._opt_mfg,) // may just be _vendor_name? or it related to accessories made by seperate brand?
         header_column_12: `FALSE`, // was set at (targetPPT._is_deleted)
       }

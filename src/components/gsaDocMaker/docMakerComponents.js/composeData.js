@@ -157,11 +157,11 @@ export default function composeData (
   // send2MainRouterState(combinedByPriceListSKU)
 
   let showCombinedBySKU = combinedByPriceListSKU?.map((product, i) => {
-    let showDocDeets = product.docDeets?.map(docItem => {
+    let showDocDeets = product.docDeets?.map((docItem, j) => {
       // console.log('docItem:', docItem)
       if (docItem !== undefined) {
         return (
-          <div key={i + docItem._source}>
+          <div key={i + docItem._source + j}>
             <div style={{ fontSize: '.59em' }}>
               {docItem._source} : {docItem._award_action}
               <br />

@@ -92,47 +92,57 @@ export default function SelectedFormatTable (props) {
     // by reverse engineering the washData() process use the property:header# mapping to create a header#:property map
     // header#:property map can then be used to feed priceList data to convert to selectedFormat
     // then map array to below tabelRows
-
-    let skuRows = gsa_sku_data?.map((item, i) => {
-      if(item._idKey){
-        let itemHeaderNum = mapProp2headerNum(item, docLists, selectedDocObj)
-        let tableRow = columnKeys?.map(headerNum => {
+    let tableRows = () => {
+      let rowsArray = []
+      let createRow = itemHeaderNum =>
+        columnKeys?.map(headerNum => {
           return <td key={headerNum}>{itemHeaderNum[headerNum]}</td>
-          // return <td key={headerNum}><button>{item[headerNum]}</button></td>
         })
+      let appendTableRow = (tableRow, item) => {
         tableRow?.unshift(<td key={'_brand'}>{item['_brand']}</td>)
         tableRow?.unshift(
           <td key={'_source'}>{item['_source'] ? item['_source'] : 'null'}</td>
         )
-  
-        return <tr key={i}>{tableRow}</tr>
+        return tableRow
       }
-      
-    })
-    let variantRows = gsa_sku_data?.map((item, i) => {
-      return item.variantDeets?.map(variant => {
-        let itemWithVariant = { ...item, variant }
-        let itemHeaderNum = mapProp2headerNum(
-          itemWithVariant,
-          docLists,
-          selectedDocObj
-        )
-        let tableRow = columnKeys?.map(headerNum => {
-          return <td key={headerNum}>{itemHeaderNum[headerNum]}</td>
-          // return <td key={headerNum}><button>{item[headerNum]}</button></td>
-        })
-        tableRow?.unshift(<td key={'_brand'}>{item['_brand']}</td>)
-        tableRow?.unshift(
-          <td key={'_source'}>{item['_source'] ? item['_source'] : 'null'}</td>
-        )
 
-        return <tr key={i}>{tableRow}</tr>
+      gsa_sku_data?.map((item, i) => {
+        if (item._idKey) {
+          let tableRow = []
+          if (!item.variantDeets.length || !iOptionsCheck) {
+            let itemHeaderNum = mapProp2headerNum(
+              item,
+              docLists,
+              selectedDocObj
+            )
+            tableRow = createRow(itemHeaderNum)
+            appendTableRow(tableRow, item)
+            return (rowsArray = [...rowsArray, <tr key={i}>{tableRow}</tr>])
+          }
+
+          if (item.variantDeets.length && iOptionsCheck) {
+            item.variantDeets?.map(variant => {
+              let itemWithVariant = { ...item, variant }
+              let itemHeaderNum = mapProp2headerNum(
+                itemWithVariant,
+                docLists,
+                selectedDocObj
+              )
+              tableRow = createRow(itemHeaderNum)
+              appendTableRow(tableRow, item)
+              return (rowsArray = [...rowsArray, <tr key={i}>{tableRow}</tr>])
+            })
+            return rowsArray
+          }
+
+          return rowsArray
+        }
+
+        return rowsArray
       })
-    })
-
-    // let tableRows = (iOptionsCheck && variantRows) ? variantRows : skuRows
-    let tableRows = (iOptionsCheck && variantRows) ? variantRows : skuRows
-    return tableRows
+      return rowsArray
+    }
+    return tableRows()
   }
 
   let showTableHeader = mapTableHeader(
